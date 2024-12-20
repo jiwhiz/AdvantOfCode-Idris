@@ -1,0 +1,4 @@
+package hello
+depends = contrib
+authors = "Yuan Ji"
+sourcedir = "."

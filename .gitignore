@@ -1,0 +1,7 @@
+# Idris 2
+*.ttc
+*.ttm
+
+
+build/
+.DS_Store
