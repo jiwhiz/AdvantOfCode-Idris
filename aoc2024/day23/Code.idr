@@ -127,16 +127,6 @@ run filename =
         printLn $ "Part Two result: " ++ (show $ part2 graph)
 
 
-testGraph : SortedMap String (SortedSet String)
-testGraph = SortedMap.fromList
-        [ ("A", SortedSet.fromList ["B", "C"])
-        , ("B", SortedSet.fromList ["A", "C", "D"])
-        , ("C", SortedSet.fromList ["A", "B", "D"])
-        , ("D", SortedSet.fromList ["B", "C"])
-        , ("E", SortedSet.empty)
-        ]
-
-
 main : IO ()
 main = do
     run "aoc2024/day23/test.txt"
