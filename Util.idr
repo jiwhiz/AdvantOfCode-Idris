@@ -35,6 +35,27 @@ parseIntegers str = reverse $
         (words str)
 
 
+-- GCD function (Euclidean Algorithm)
+export
+gcd : Integer -> Integer -> Integer
+gcd a 0 = abs a
+gcd a b = gcd b (a `mod` b)
+
+
+-- LCM of two integers
+export
+lcmTwo : Integer -> Integer -> Integer
+lcmTwo a b = abs (a * b) `div` gcd a b
+
+
+-- LCM of a list of integers
+export
+lcm : List Integer -> Integer
+lcm [] = 1 -- LCM of an empty list is 1 (neutral element)
+lcm (x :: xs) = foldl lcmTwo x xs
+
+
+
 export
 displayGrid : Int -> Int -> SortedMap (Int, Int) Char -> IO ()
 displayGrid width height grid =
