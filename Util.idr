@@ -70,11 +70,8 @@ displayGrid width height grid =
 
         printRow : Int -> SortedMap (Int, Int) Char -> IO ()
         printRow row grid = do 
-            printLn $ pack $ 
-                (\col => case lookup (row, col) grid of
-                    Nothing => ' '
-                    Just c => c
-                )
+            putStrLn $ pack $ 
+                (\col => case lookup (row, col) grid of Nothing => ' '; Just c => c)
                 <$> rangeInteger width
 
         printGrid : Int -> SortedMap (Int, Int) Char -> IO ()
