@@ -5,7 +5,7 @@ import Data.String
 import Data.String.Parser
 import Util
 
-anyChar : Applicative m => ParseT m Char
+anyChar : Parser Char
 anyChar = P $ \s =>
     if s.pos < s.maxPos then
         let ch = assert_total $ strIndex s.input s.pos in
@@ -21,43 +21,43 @@ data Inst : Type where
 
 
 -- Parse exactly the format: mul(<int>,<int>)
-mulParser : Monad m => ParseT m Inst
+mulParser : Parser Inst
 mulParser = do
     skip $ string "mul("
-    x <- integer   -- integer returns Integer
+    x <- integer
     skip $ char ','
-    y <- integer   -- integer returns Integer
+    y <- integer
     skip $ char ')'
     pure $ Mult x y
 
 
-doParser : Monad m => ParseT m Inst
+doParser : Parser Inst
 doParser = do 
     skip $ string "do()"
     pure Do
 
 
-dontParser : Monad m => ParseT m Inst
+dontParser : Parser Inst
 dontParser = do 
     skip $ string "don't()"
     pure Dont
 
 
-instParser : Monad m => ParseT m Inst
+instParser : Parser Inst
 instParser = mulParser <|> doParser <|> dontParser
 
 
 mutual
-    some' : Monad m => ParseT m a -> ParseT m (List a)
+    some' : Parser a -> Parser (List a)
     some' p = do
         r <- p
         rs <- many' p
         pure $ r :: rs
 
-    many' : Monad m => ParseT m a -> ParseT m (List a)
+    many' : Parser a -> Parser (List a)
     many' p = some' p <|> (anyChar *> many' p) <|> pure []
 
-allParser : Monad m => ParseT m (List Inst)
+allParser : Parser (List Inst)
 allParser =
     many' instParser
 

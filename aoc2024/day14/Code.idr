@@ -26,7 +26,7 @@ record Robot where
 Show Robot where
     show r = "p:" ++ show r.p ++ " v:" ++ show r.v
 
-parseP : Monad m => ParseT m Point
+parseP : Parser Point
 parseP = do
     skip $ string "p="
     x <- integer
@@ -36,7 +36,7 @@ parseP = do
     pure (x, y)
 
 
-parseV : Monad m => ParseT m Point
+parseV : Parser Point
 parseV = do
     skip $ string "v="
     x <- integer
@@ -45,7 +45,7 @@ parseV = do
     pure (x, y)
 
 
-parseRobot : Monad m => ParseT m Robot
+parseRobot : Parser Robot
 parseRobot = MkRobot <$> parseP <*> parseV <* many (char '\n')
 
 

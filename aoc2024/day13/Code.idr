@@ -5,7 +5,7 @@ import Data.String
 import Data.String.Parser
 import Util
 
-anyChar : Applicative m => ParseT m Char
+anyChar : Parser Char
 anyChar = P $ \s =>
     if s.pos < s.maxPos then
         let ch = assert_total $ strIndex s.input s.pos in
@@ -25,31 +25,29 @@ record Machine where
 Show Machine where
     show m = "A:" ++ show m.a ++ " B:" ++ show m.b ++ " P:" ++ show m.p
 
-parseButton : Monad m => ParseT m Point
+parseButton : Parser Point
 parseButton = do
-    skip $ token "Button"
+    token "Button"
     skip $ anyChar
-    skip $ token ":"
-    skip $ token "X+"
+    token ": X+"
     x <- integer
-    skip $ token ","
-    skip $ token "Y+"
+    token ", Y+"
     y <- integer
     skip $ char '\n'
     pure (x, y)
 
 
-parsePrize : Monad m => ParseT m Point
+parsePrize : Parser Point
 parsePrize = do
-    skip $ string "Prize: X="
+    token "Prize: X="
     x <- integer
-    skip $ string ", Y="
+    token ", Y="
     y <- integer
     skip $ char '\n'
     pure (x, y)
 
 
-parseMachine : Monad m => ParseT m Machine
+parseMachine : Parser Machine
 parseMachine = MkMachine <$> parseButton <*> parseButton <*> parsePrize <* many (char '\n')
 
 

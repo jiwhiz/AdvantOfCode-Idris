@@ -1,4 +1,4 @@
-Register A: 3003
+Register A: 28066687
 Register B: 0
 Register C: 0
 

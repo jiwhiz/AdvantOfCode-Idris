@@ -10,7 +10,7 @@ import Decidable.Equality
 import Util
 import Debug.Trace
 
-anyChar : Applicative m => ParseT m Char
+anyChar : Parser Char
 anyChar = P $ \s =>
     if s.pos < s.maxPos then
         let ch = assert_total $ strIndex s.input s.pos in
@@ -29,16 +29,16 @@ record Machine where
 Show Machine where
     show m = "A:" ++ show m.a ++ " B:" ++ show m.b ++ " C:" ++ show m.c
 
-parseRegister : Monad m => ParseT m Nat
+parseRegister : Parser Nat
 parseRegister = do
-    skip $ token "Register"
+    token "Register"
     skip $ anyChar
-    skip $ token ":"
+    token ":"
     x <- integer
     pure (cast x)
 
 
-parseMachine : Monad m => ParseT m Machine
+parseMachine : Parser Machine
 parseMachine = MkMachine <$> parseRegister <*> parseRegister <*> parseRegister
 
 parseIntList : String -> List Int
@@ -210,10 +210,10 @@ run filename =
         let program := parseIntList $ snd $ break (== ' ') (joinBy "" p2)
 
         let (output, m) := runProgram program machine
-        printLn $ "Part One result: " ++ (pack $ filter (not . (==) ' ') $unpack $ show $ reverse output)
+        putStrLn $ "Part One result: " ++ (pack $ filter (not . (==) ' ') $ unpack $ show $ reverse output)
 
         let (v::vs) := map bitListToInteger $ part2 $ (\i => cast i) <$> reverse program | _ => printLn "No result for part 2"
-        printLn $ "Part Two result: " ++ (show $ foldl min v vs)
+        putStrLn $ "Part Two result: " ++ (show $ foldl min v vs)
 
 
 main : IO ()
